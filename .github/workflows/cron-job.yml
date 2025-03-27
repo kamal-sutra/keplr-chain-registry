@@ -28,6 +28,12 @@ jobs:
         env: 
           PRICE_URL: ${{ secrets.PRICE_URL }}
 
+      # Debug step to print outputs
+      - name: Debug Check Update Output
+        run: |
+          echo "hasError=${{ steps.check-update.outputs.hasError }}"
+          echo "errorMessage=${{ steps.check-update.outputs.errorMessage }}"
+
       - name: Slack Alert Notification
         uses: slackapi/slack-github-action@v1.23.0
         if: ${{ steps.check-update.outputs.hasError }}
@@ -43,7 +49,7 @@ jobs:
                     {
                       "title": "Error Message",
                       "short": false,
-                      "value": "${{ steps.check-update.outputs.errorMessage }}"
+                      "value": ${{ toJSON(steps.check-update.outputs.errorMessage) }}
                     }
                   ]
                 }
